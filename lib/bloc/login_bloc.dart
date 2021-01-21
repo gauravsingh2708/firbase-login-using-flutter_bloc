@@ -1,16 +1,18 @@
+
+
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_login/bloc/login_event.dart';
 import 'package:firebase_login/bloc/login_state.dart';
 import 'package:firebase_login/login_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'login_event.dart';
-
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginRepository loginRepository;
 
   LoginBloc({LoginRepository loginRepository}) {
     loginRepository = loginRepository;
   }
-
+  LoginRepository loginRepository;
   @override
   LoginState get initialState => LoginInitialState();
 
@@ -19,12 +21,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoginButtonPressed) {
       yield LoginLoadingState();
       try {
-        var user = await loginRepository.logInWithEmailAndPassword(email: event.email,password: event.password);
+        print('${event.email}   ${event.password}');
+        var user = await LoginRepository().logInWithEmailAndPassword(email: event.email,password: event.password);
         yield LoginSuccessState(user);
       } catch (e) {
+        print(e.toString());
         yield LoginFailState(e.toString());
       }
     }
   }
 }
-
