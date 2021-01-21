@@ -1,3 +1,4 @@
+import 'package:firebase_login/login_repo.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -6,6 +7,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  LoginRepository loginRepository = LoginRepository();
+
   @override
   Widget build(BuildContext context)=> Scaffold(
     body: Form(
@@ -53,8 +56,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             MaterialButton(
-              onPressed:(){},
+              onPressed:(){
+              },
               height: 80,
+              color: Colors.blue,
               child: const Text('Login'),
             )
           ],

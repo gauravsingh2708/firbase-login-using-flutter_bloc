@@ -30,6 +30,9 @@ dependencies:
   cupertino_icons: ^1.0.0
   firebase_core: ^0.7.0
   firebase_auth: ^0.20.0+1
+  flutter_bloc: ^3.0.0
+  equatable: ^1.2.5
+  meta: ^1.1.8
 
 dev_dependencies:
   flutter_test:
