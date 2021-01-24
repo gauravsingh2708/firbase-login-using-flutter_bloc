@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class LoginState {}
+abstract class LoginState {
+
+}
 
 class LoginInitialState extends LoginState {
   List<Object> get props => null;

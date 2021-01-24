@@ -1,7 +1,6 @@
 import 'package:firebase_login/bloc/login_bloc.dart';
 import 'package:firebase_login/bloc/login_event.dart';
 import 'package:firebase_login/bloc/login_state.dart';
-import 'package:firebase_login/home.dart';
 import 'package:firebase_login/login_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +20,8 @@ class LoginPageUi extends StatelessWidget {
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passTextController = TextEditingController();
   LoginBloc loginBloc;
+  final _formKey = GlobalKey<FormState>();
+  bool validatePass(bool cond)=> cond;
   @override
   Widget build(BuildContext context) {
     loginBloc = BlocProvider.of<LoginBloc>(context);
@@ -38,12 +39,13 @@ class LoginPageUi extends StatelessWidget {
               child: BlocBuilder<LoginBloc,LoginState>(
                 builder: (context,state){
                   if (state is LoginInitialState) {
-                    return bodyUi();
+                    return bodyUi(context, state);
                   } else if (state is LoginLoadingState) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is LoginFailState) {
+                  }
+                  else if (state is LoginFailState) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -55,7 +57,7 @@ class LoginPageUi extends StatelessWidget {
                             style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                        bodyUi(),
+                        bodyUi(context,state),
                       ],
                     );
                   } else if (state is LoginSuccessState) {
@@ -76,7 +78,7 @@ class LoginPageUi extends StatelessWidget {
       ),
     );
   }
-  Widget bodyUi()=> Padding(
+  Widget bodyUi(BuildContext context, LoginState state)=> Padding(
     padding: const EdgeInsets.all(20.0),
     child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,17 +89,22 @@ class LoginPageUi extends StatelessWidget {
             child: Text('Login',style: TextStyle(fontSize: 40,color: Colors.blue,fontWeight: FontWeight.w500),),
           ),
           TextFormField(
-            decoration: const InputDecoration(
+            onChanged: (email)=> loginBloc.add(ValidateEmail(email: email)),
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
               labelText: 'Email',
-              hintText: 'Enter valid Email'
+              hintText: 'Enter valid Email',
+              errorText: !loginBloc.getEmailVal?'Enter correct Email': null,
             ),
             controller: emailTextController,
           ),
           const SizedBox(height: 20,),
           TextFormField(
-            decoration: const InputDecoration(
+            onChanged: (password)=> loginBloc.add(ValidatePassword(password: password)),
+            decoration: InputDecoration(
                 labelText: 'Password',
-                hintText: 'Enter password'
+                hintText: 'Enter password',
+                errorText: !loginBloc.getPassVal?'Enter correct Password': null,
             ),
             controller: passTextController,
           ),
@@ -112,35 +119,5 @@ class LoginPageUi extends StatelessWidget {
         ],
       ),
   );
-
 }
 
-
-// class LoginPage extends StatefulWidget {
-//   @override
-//   _LoginPageState createState() => _LoginPageState();
-// }
-//
-// class _LoginPageState extends State<LoginPage> {
-//   LoginRepository loginRepository = LoginRepository();
-//   TextEditingController emailTextController = TextEditingController();
-//   TextEditingController passTextController = TextEditingController();
-//   LoginBloc loginBloc;
-//   @override
-//   Widget build(BuildContext context){
-//     loginBloc = BlocProvider.of<LoginBloc>(context);
-//     return Scaffold(
-//     body: Form(
-//       child: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: BlocProvider(
-//           create: (context) =>LoginBloc(loginRepository: loginRepository),
-//           child: BlocBuilder<LoginBloc,LoginState>(
-//             builder: (context,){},
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-//   }
-// }
